@@ -17,21 +17,21 @@ import net.minecraftforge.items.SlotItemHandler;
 public class BarterBoxSellerContainer extends Container
 {	
 	// how many slots we have on each side
-	public static final int SELL_ROWS = 3;
-	public static final int SELL_COLUMNS = 9;
-	public static final int SELL_SLOTS = SELL_ROWS * SELL_COLUMNS;
+	public static final int OFFER_ROWS = 3;
+	public static final int OFFER_COLUMNS = 9;
+	public static final int OFFER_SLOTS = OFFER_ROWS * OFFER_COLUMNS;
 	
 	// x-and-y-positions to start placing the container slots at
-	public static final int XSTART_SELLER = 8;
-	public static final int YSTART_SELLER = 18;
-	public static final int XSTART_BUYER = 123;
-	public static final int YSTART_BUYER = 91;
+	public static final int XSTART_OFFERS = 8;
+	public static final int YSTART_OFFERS = 18;
+	public static final int XSTART_EARNED = 134;
+	public static final int YSTART_EARNED = 91;
 	public static final int SLOT_SPACING = 18; // distance between two adjacent slot positions (x or y)
 	
 	// player inventory
 	public static final int PLAYER_ROWS = 3;
 	public static final int PLAYER_COLUMNS = 9;
-	public static final int XSTART_PLAYER = XSTART_SELLER;
+	public static final int XSTART_PLAYER = XSTART_OFFERS;
 	public static final int YSTART_PLAYER = 140;
 	public static final int YSTART_HOTBAR = 198;
 	public static final int PLAYER_SLOTS = (PLAYER_ROWS + 1) * PLAYER_COLUMNS;
@@ -39,17 +39,17 @@ public class BarterBoxSellerContainer extends Container
 	// slot ids by sub-inventory
 	// seller slots are in the range [FIRST_SELLER_SLOT, END_SELLER_SLOTS)
 	// player slots are in the range [FIRST_PLAYER_SLOT, END_PLAYER_SLOTS)
-	public static final int FIRST_SELLER_SLOT = 0;
-	public static final int FIRST_BUYER_SLOT = FIRST_SELLER_SLOT + SELL_SLOTS;
-	public static final int FIRST_PLAYER_SLOT = FIRST_BUYER_SLOT + 1;
+	public static final int FIRST_OFFER_SLOT = 0;
+	public static final int FIRST_EARNED_SLOT = FIRST_OFFER_SLOT + OFFER_SLOTS;
+	public static final int FIRST_PLAYER_SLOT = FIRST_EARNED_SLOT + 1;
 	public static final int END_PLAYER_SLOTS = FIRST_PLAYER_SLOT + PLAYER_SLOTS;
-	public static final int END_SELLER_SLOTS = FIRST_BUYER_SLOT;
+	public static final int END_OFFER_SLOTS = FIRST_EARNED_SLOT;
 	
 	public final IWorldPosCallable usabilityTest;
 	
 	public static BarterBoxSellerContainer getClientContainer(int id, PlayerInventory playerInventory)
 	{
-		return new BarterBoxSellerContainer(id, playerInventory, new ItemStackHandler(SELL_SLOTS), new ItemStackHandler(SELL_SLOTS), IWorldPosCallable.DUMMY);
+		return new BarterBoxSellerContainer(id, playerInventory, new ItemStackHandler(OFFER_SLOTS), new ItemStackHandler(OFFER_SLOTS), IWorldPosCallable.DUMMY);
 	}
 	
 	public static IContainerProvider getServerContainerProvider(BarterBoxTileEntity te)
@@ -65,19 +65,19 @@ public class BarterBoxSellerContainer extends Container
 		this.usabilityTest = usabilityTest;
 		
 		// add slots for items to be sold
-		for (int row=0; row<SELL_ROWS; row++)
+		for (int row=0; row<OFFER_ROWS; row++)
 		{
-			for (int column=0; column<SELL_COLUMNS; column++)
+			for (int column=0; column<OFFER_COLUMNS; column++)
 			{
-				int slotIndex = row*SELL_COLUMNS + column;
-				int x = XSTART_SELLER + SLOT_SPACING*column;
-				int y = YSTART_SELLER + SLOT_SPACING*row;
+				int slotIndex = row*OFFER_COLUMNS + column;
+				int x = XSTART_OFFERS + SLOT_SPACING*column;
+				int y = YSTART_OFFERS + SLOT_SPACING*row;
 				this.addSlot(new SlotItemHandler(sellerItems, slotIndex, x, y));
 			}
 		}
 		
 		// add slots for items received from buyers
-		this.addSlot(new SlotItemHandler(buyerItems, 0, XSTART_BUYER, YSTART_BUYER));
+		this.addSlot(new SlotItemHandler(buyerItems, 0, XSTART_EARNED, YSTART_EARNED));
 
 		// add slots for player hotbar
 		for (int column = 0; column < PLAYER_COLUMNS; ++column)
@@ -134,7 +134,7 @@ public class BarterBoxSellerContainer extends Container
 				}
 			}
 			// otherwise, this is a player slot
-			else if (!this.mergeItemStack(stackInSlot, FIRST_SELLER_SLOT, END_SELLER_SLOTS, false))
+			else if (!this.mergeItemStack(stackInSlot, FIRST_OFFER_SLOT, END_OFFER_SLOTS, false))
 			{
 				return ItemStack.EMPTY;
 			}
